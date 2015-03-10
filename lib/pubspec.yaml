@@ -1,0 +1,4 @@
+name: server
+dependencies:
+        json: any
+        jaded: any
