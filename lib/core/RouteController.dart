@@ -1,7 +1,7 @@
 part of server;
 
 abstract class RouteController {
-  RouteHandler();
+  RouteController();
 
   Map execute() {
     return {};

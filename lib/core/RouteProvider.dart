@@ -33,7 +33,11 @@ class RouteProvider {
       Map templateVars = controller.execute();
       responseHandler.response(request, templateVars);
     } else {
-      request.response.redirect(this.cfg["defaultRoute"]);
+      request.response
+        ..statusCode = HttpStatus.NOT_FOUND
+        ..write('Not found')
+        ..close();
+      //request.response.redirect(this.cfg["defaultRoute"]);
     }
   }
 }

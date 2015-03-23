@@ -10,6 +10,8 @@ part 'core/RouteProvider.dart';
 
 part 'core/ResponseHandler.dart';
 part 'core/JadeResponse.dart';
+part 'core/JSONResponse.dart';
+part 'core/Younow.dart';
 
 
 class ControllerURL1 extends RouteController {
@@ -19,13 +21,23 @@ class ControllerURL1 extends RouteController {
     };
   }
 }
+class ControllerApiGetData extends RouteController {
+  Younow yn;
 
-class ControllerURL2 extends RouteController {
+  ControllerApiGetData(this.yn): super();
+
+  Map execute() {
+    return yn.getData();
+  }
+}
+class ControllerEmpty extends RouteController {
 }
 
-
-
 main() {
+
+  Younow yn = new Younow();
+  Map data;
+
   HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 4040).then((HttpServer server) {
     print('listening on localhost, port ${server.port}');
 
@@ -33,16 +45,35 @@ main() {
         "defaultRoute":"/url1"
     })
     ..route({
+        "url": "/",
+        "controller": new ControllerEmpty(),
+        "response": new JadeResponse("views/index.jade")
+    })
+    ..route({
+        "url": "/api/getData",
+        "controller": new ControllerApiGetData(yn),
+        "response": new JSONResponse("")
+    })
+    ..route({
       "url": "/url1",
       "controller": new ControllerURL1(),
-      "response": new JadeResponse("/views/test.jade")
+      "response": new JadeResponse("views/test.jade")
     })
     ..route({
       "url": "/url2",
-      "controller": new ControllerURL2(),
-      "response": new JadeResponse("/views/test2.jade")
+      "controller": new ControllerEmpty(),
+      "response": new JadeResponse("views/test2.jade")
     })
     ..start();
+
+    void refresh(dynamic) {
+      yn.refreshData();
+      data = yn.getData();
+    }
+
+    Timer s = new Timer.periodic(const Duration(milliseconds: 10000),refresh);
+
+
 
   }).catchError((e) => print(e.toString()));
 }
