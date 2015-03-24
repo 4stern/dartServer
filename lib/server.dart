@@ -16,56 +16,58 @@ part 'core/Younow.dart';
 
 
 class ControllerURL1 extends RouteController {
-  Map execute() {
-    return {
-      "foo":"sdsdsd"
-    };
-  }
+    Map execute() {
+        return {
+            "foo":"sdsdsd"
+        };
+    }
 }
+
 class ControllerApiGetData extends RouteController {
-  Younow yn;
+    Younow yn;
 
-  ControllerApiGetData(this.yn): super();
+    ControllerApiGetData(this.yn): super();
 
-  Map execute() {
-    return yn.getData();
-  }
+    Map execute() {
+        return yn.getData();
+    }
 }
+
 class ControllerEmpty extends RouteController {
 }
 
 main() {
 
-  Younow yn = new Younow();
-  Map data;
+    Younow yn = new Younow();
+    Map data;
 
-  HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 4040).then((HttpServer server) {
-    print('listening on localhost, port ${server.port}');
+    HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 4040).then((HttpServer server) {
+        print('listening on localhost, port ${server.port}');
 
-    new RouteProvider(server, {
-        "defaultRoute":"/url1"
-    })
-    ..route({
-        "url": "/",
-        "controller": new ControllerEmpty(),
-        "response": new JadeResponse("views/index.jade")
-    })
-    ..route({
-        "url": "/api/getData",
-        "controller": new ControllerApiGetData(yn),
-        "response": new JSONResponse("")
-    })
-    ..start();
+        new RouteProvider(server, {
+            "defaultRoute":"/url1",
+            "staticContentRoot":"/asset"
+        })
+            ..route({
+            "url": "/",
+            "controller": new ControllerEmpty(),
+            "response": new JadeResponse("views/index.jade")
+        })
+            ..route({
+            "url": "/api/getData",
+            "controller": new ControllerApiGetData(yn),
+            "response": new JSONResponse("")
+        })
+            ..start();
 
-    void refresh(dynamic) {
-      yn.refreshData();
-      data = yn.getData();
-    }
+        void refresh(dynamic) {
+            yn.refreshData();
+            data = yn.getData();
+        }
 
-    Timer s = new Timer.periodic(const Duration(milliseconds: 10000),refresh);
+        Timer s = new Timer.periodic(const Duration(milliseconds: 10000), refresh);
 
 
-
-  }).catchError((e) => print(e.toString()));
+    }).catchError((e) => print(e.toString()));
 }
 
