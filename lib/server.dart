@@ -11,6 +11,7 @@ part 'core/RouteProvider.dart';
 part 'core/ResponseHandler.dart';
 part 'core/JadeResponse.dart';
 part 'core/JSONResponse.dart';
+part 'core/FileResponse.dart';
 part 'core/Younow.dart';
 
 
@@ -53,16 +54,6 @@ main() {
         "url": "/api/getData",
         "controller": new ControllerApiGetData(yn),
         "response": new JSONResponse("")
-    })
-    ..route({
-      "url": "/url1",
-      "controller": new ControllerURL1(),
-      "response": new JadeResponse("views/test.jade")
-    })
-    ..route({
-      "url": "/url2",
-      "controller": new ControllerEmpty(),
-      "response": new JadeResponse("views/test2.jade")
     })
     ..start();
 

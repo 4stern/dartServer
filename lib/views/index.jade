@@ -1,9 +1,16 @@
 DOCTYPE(html)
-html
+html(ng-app='yn')
     head(lang="de")
         meta(charset="UTF-8")
         title
             | myTitle
+        script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js')
+        script(src='js/code.js', type='text/javascript')
+
     body
         h1
-            | Test
+            | Data
+        div(ng-controller="statsController")
+            ul
+                li(ng-repeat="user in data.trending_users",style="float:left; style:none;")
+                    img(src="http://cdn2.younow.com/php/api/channel/getImage/channelId="+ '{{user.userId}}' +"", title=""+'{{user.username}}'+" "+'{{user.viewers}}')

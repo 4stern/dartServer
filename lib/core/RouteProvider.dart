@@ -33,11 +33,15 @@ class RouteProvider {
       Map templateVars = controller.execute();
       responseHandler.response(request, templateVars);
     } else {
-      request.response
-        ..statusCode = HttpStatus.NOT_FOUND
-        ..write('Not found')
-        ..close();
-      //request.response.redirect(this.cfg["defaultRoute"]);
+      if(path.startsWith('/js/') && !path.contains('..') && path.endsWith('.js')){
+        FileResponse fr = new FileResponse(path.substring(1));
+        fr.response(request,{});
+      } else {
+        request.response
+          ..statusCode = HttpStatus.NOT_FOUND
+          ..write('Not found')
+          ..close();
+      }
     }
   }
 }
