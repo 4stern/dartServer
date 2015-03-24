@@ -65,7 +65,7 @@ main() {
             data = yn.getData();
         }
 
-        Timer s = new Timer.periodic(const Duration(milliseconds: 10000), refresh);
+        Timer s = new Timer.periodic(const Duration(milliseconds: 30000), refresh);
 
 
     }).catchError((e) => print(e.toString()));

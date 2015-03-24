@@ -3,20 +3,24 @@ html(ng-app='yn')
     head(lang="de")
         meta(charset="UTF-8")
         title
-            | myTitle
+            | younow monitor
         script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js')
         script(src='/asset/js/code.js', type='text/javascript')
-        link(rel="stylesheet",type="text/css", href="/asset/css/style.css")
+        link(href="/asset/css/style.css", rel="stylesheet", type="text/css")
     body
-        h1
-            | Data
         div(ng-controller="statsController")
-            ul
-                li(ng-repeat="user in data.trending_users",style="float:left; style:none;")
-                    img(src="http://cdn2.younow.com/php/api/channel/getImage/channelId=" + '{{user.userId}}' + "", title="" + '{{user.username}}' + " " + '{{user.viewers}}')
-                    span.tagname {{user.tags[0]}}
+            div.trendingUser
+                h2 trending user
+                ul
+                    li(ng-repeat="user in data.trending_users",style="float:left; style:none;")
+                        a(href="http://www.younow.com/"+ '{{user.username}}', target="_blank")
+                            img(src="http://cdn2.younow.com/php/api/channel/getImage/channelId=" + '{{user.userId}}' + "", title="" + '{{user.username}}' + " " + '{{user.viewers}}')
+                            span.tagname {{user.tags[0]}}
             div(style="clear: both;")
-            table
-                tr(ng-repeat="tag in data.trending_tags")
-                    td {{tag.tag}}
-                    td(style="text-align: left;") {{tag.score}}
+            div.trendingTags
+                h2 trending tags
+                div
+                    table
+                        tr(ng-repeat="tag in data.trending_tags")
+                            td= '#'+'{{tag.tag}}'
+                            //td(style="text-align: left;") {{tag.score}}
