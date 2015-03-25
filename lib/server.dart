@@ -3,9 +3,9 @@ library server;
 import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
-import 'package:jaded/jaded.dart' as jade;
 
-part 'core/Younow.dart';
+import 'package:jaded/jaded.dart' as jade;
+import 'package:younow/younow.dart';
 
 part 'core/RouteController.dart';
 part 'core/RouteProvider.dart';
@@ -19,36 +19,35 @@ part 'core/controller/ControllerApiGetData.dart';
 part 'core/controller/ControllerEmpty.dart';
 
 main() {
-
     Younow yn = new Younow();
     Map data;
+    int refreshTime = 30000;
 
     HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 4040).then((HttpServer server) {
         print('listening on localhost, port ${server.port}');
 
+        //start webserver
         new RouteProvider(server, {
-            "defaultRoute":"/url1",
+            "defaultRoute":"/",
             "staticContentRoot":"/asset"
         })
             ..route({
-            "url": "/",
-            "controller": new ControllerEmpty(),
-            "response": new JadeResponse("views/index.jade")
-        })
+                "url": "/",
+                "controller": new ControllerEmpty(),
+                "response": new JadeResponse("views/index.jade")
+            })
             ..route({
-            "url": "/api/getData",
-            "controller": new ControllerApiGetData(yn),
-            "response": new JSONResponse("")
-        })
+                "url": "/api/getData",
+                "controller": new ControllerApiGetData(yn),
+                "response": new JSONResponse("")
+            })
             ..start();
 
-        void refresh(dynamic) {
+        //start getting younow data per interval 
+        new Timer.periodic(const Duration(milliseconds: refreshTime), (dynamic) {
             yn.refreshData();
             data = yn.getData();
-        }
-
-        Timer s = new Timer.periodic(const Duration(milliseconds: 30000), refresh);
-
+        });
 
     }).catchError((e) => print(e.toString()));
 }
