@@ -17,6 +17,7 @@ part 'core/FileResponse.dart';
 
 part 'core/controller/ControllerApiGetData.dart';
 part 'core/controller/ControllerEmpty.dart';
+part 'core/controller/ControllerTest.dart';
 
 main() {
     Younow yn = new Younow();
@@ -34,6 +35,11 @@ main() {
                 "url": "/",
                 "controller": new ControllerEmpty(),
                 "response": new JadeResponse("views/index.jade")
+            })
+            ..route({
+                "url": "/api/test/:user/:id",
+                "controller": new ControllerTest(),
+                "response": new JSONResponse("")
             })
             ..route({
                 "url": "/api/getData",

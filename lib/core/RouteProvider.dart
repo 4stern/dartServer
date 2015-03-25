@@ -2,14 +2,16 @@ part of server;
 
 class RouteProvider {
     HttpServer server;
-    Map<String, Map> routeControllers = new Map();
     Map cfg;
+    Map<String, Map> routeControllers = new Map();
 
     RouteProvider(this.server, this.cfg);
 
     void route(Map routeConfig) {
-        String url = routeConfig["url"];
-        routeControllers[url] = routeConfig;
+        if (routeConfig.containsKey('url')) {
+            String url = routeConfig["url"];
+            this.routeControllers[url] = routeConfig;
+        }
     }
 
     void start() {
@@ -20,45 +22,109 @@ class RouteProvider {
         String path = request.uri.path;
         print('incomming request: ' + path);
 
+        // direct cancels
+        if (path.contains('..') || path.contains(':')) {
+            //404 not found
+            request.response
+                ..statusCode = HttpStatus.NOT_FOUND
+                ..write('Not found')
+                ..close();
+        }
+
         // route has a config?
-        if (routeControllers.containsKey(path)) {
+        if (this.routeControllers.containsKey(path)) {
+            Map params = null;
 
             //get config of this route
-            Map routeConfig = routeControllers[path];
+            Map routeConfig = this.routeControllers[path];
 
             RouteController controller = routeConfig["controller"];
             ResponseHandler responseHandler = routeConfig["response"];
 
             //create vars for the template
-            Map templateVars = controller.execute();
+            Map templateVars = controller.execute(params);
             responseHandler.response(request, templateVars);
 
         } else {
 
-            //try to find the file with the default file-response-handler
-            if (this.cfg.containsKey('staticContentRoot') &&
-                path.startsWith(this.cfg['staticContentRoot']+'/') &&
-                !path.contains('..') /*&& path.endsWith('.js')*/) {
+            //try to handle urls with inner-vars
+            String comparedUrl = null;
+            Map comparedUrlParams = null;
+            for(var key in this.routeControllers.keys) {
+                comparedUrlParams = this.compareUrlPattern(path, key);
+                comparedUrl = key;
+            };
+print('404#0');
+print(comparedUrlParams);
+            if(comparedUrlParams!=null){
 
-                try {
-                    FileResponse fr = new FileResponse(path.substring(1));
-                    fr.response(request, {});
-                } catch (exception) {
+                // found url
+                //get config of this route
+                Map routeConfig = this.routeControllers[comparedUrl];
 
+                RouteController controller = routeConfig["controller"];
+                ResponseHandler responseHandler = routeConfig["response"];
+
+                //create vars for the template
+                Map templateVars = controller.execute(params);
+                responseHandler.response(request, templateVars);
+
+            } else {
+
+                //try to find the file with the default file-response-handler
+                if (this.cfg.containsKey('staticContentRoot') && path.startsWith(this.cfg['staticContentRoot']+'/')) {
+
+                    try {
+                        FileResponse fr = new FileResponse(path.substring(1));
+                        fr.response(request, {});
+                    } catch (exception) {
+print('404#1');
+                        //404 not found
+                        request.response
+                            ..statusCode = HttpStatus.NOT_FOUND
+                            ..write('Not found')
+                            ..close();
+                    }
+                } else {
+print('404#2');
                     //404 not found
                     request.response
                         ..statusCode = HttpStatus.NOT_FOUND
                         ..write('Not found')
                         ..close();
                 }
-            } else {
-
-                //404 not found
-                request.response
-                    ..statusCode = HttpStatus.NOT_FOUND
-                    ..write('Not found')
-                    ..close();
-            }
+            } 
         }
     }
+
+    Map compareUrlPattern(String url, String urlPattern){
+        print('compareUrlPattern');
+        print(url);
+        print(urlPattern);
+        List requestedUrl = url.split("/");
+        List patternUrl = urlPattern.split("/");
+        int countIdent = 0;
+        bool matched = false;
+        Map<String, String> matchedResult = new Map<String, String>();
+
+        if (requestedUrl.length == patternUrl.length) {
+            for (int i=0; i<requestedUrl.length; i++) {
+                bool dobblePoint = patternUrl[i].startsWith(":");
+                if ( requestedUrl[i] == patternUrl[i] || dobblePoint==true ) {
+                    countIdent++;
+                    if(dobblePoint==true){
+                        matchedResult[patternUrl[i].substring(1)] = requestedUrl[i];
+                    }
+                }
+            }
+            matched = countIdent == requestedUrl.length;
+        }
+        if(matched == true){
+            print('found MACHTED');
+            return matchedResult;
+        } else {
+            return null;
+        }
+    }
+
 }

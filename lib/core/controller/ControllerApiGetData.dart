@@ -5,7 +5,7 @@ class ControllerApiGetData extends RouteController {
 
     ControllerApiGetData(this.yn): super();
 
-    Map execute() {
+    Map execute(Map params) {
         return yn.getData();
     }
 }
