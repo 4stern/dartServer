@@ -5,6 +5,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:jaded/jaded.dart' as jade;
 
+part 'core/Younow.dart';
+
 part 'core/RouteController.dart';
 part 'core/RouteProvider.dart';
 
@@ -12,29 +14,9 @@ part 'core/ResponseHandler.dart';
 part 'core/JadeResponse.dart';
 part 'core/JSONResponse.dart';
 part 'core/FileResponse.dart';
-part 'core/Younow.dart';
 
-
-class ControllerURL1 extends RouteController {
-    Map execute() {
-        return {
-            "foo":"sdsdsd"
-        };
-    }
-}
-
-class ControllerApiGetData extends RouteController {
-    Younow yn;
-
-    ControllerApiGetData(this.yn): super();
-
-    Map execute() {
-        return yn.getData();
-    }
-}
-
-class ControllerEmpty extends RouteController {
-}
+part 'core/controller/ControllerApiGetData.dart';
+part 'core/controller/ControllerEmpty.dart';
 
 main() {
 
