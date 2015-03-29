@@ -21,28 +21,21 @@ html(ng-app='yn')
                 span.list {{currents.tag}}
                     div
                         ul
-                            li(ng-repeat="tag in tags",ng-click="switchTag(tag.name)")
-                                span {{tag.name}}
+                            li(ng-repeat="i in tags",ng-click="switchTag(i.name)")
+                                span {{i.name}}
 
         //ul
             li(ng-repeat="tag in tags")
                 span {{tag.name}}
         ul.users
-            li(ng-repeat="user in users",style="background: url(http://cdn2.younow.com/php/api/channel/getImage/channelId="+'{{user.userId}}'+");")
-                a(ng-href="http://www.younow.com/" + '{{user.profile}}', target="_blank",style="display:inline-block; width:100%; height:100%;")
-                    //img(src="http://cdn2.younow.com/php/api/channel/getImage/channelId=" + '{{user.userId}}' + "", title="" + '{{user.username}}' + " " + '{{user.viewers}}')
-                    span.tagname {{user.username}}
-        //div.trendingUser
-            h2 trending user
+            li( ng-repeat="user in users",
+                ng-click="addUserToSelection(user)",
+                style="background: url(http://cdn2.younow.com/php/api/channel/getImage/channelId="+'{{user.userId}}'+");")
+                span.tagname {{user.username}}
+
+        div.selectedusers
             ul
-                li(ng-repeat="user in data.trending_users",style="float:left; style:none;")
-                    a(href="http://www.younow.com/"+ '{{user.profile}}', target="_blank")
-                        img(src="http://cdn2.younow.com/php/api/channel/getImage/channelId=" + '{{user.userId}}' + "", title="" + '{{user.username}}' + " " + '{{user.viewers}}')
-                        span.tagname {{user.tags[0]}}
-        //div(style="clear: both;")
-        //div.trendingTags
-            h2 trending tags
-            div
-                table
-                    tr(ng-repeat="tag in data.trending_tags")
-                        td= '#'+'{{tag.tag}}'
+                li( ng-repeat="user in selectedUsers",
+                    ng-click="removeUserFromSelection(user)",
+                    style="background: url(http://cdn2.younow.com/php/api/channel/getImage/channelId=" + '{{user.userId}}' + ") ;")
+                    span.tagname {{user.username}}

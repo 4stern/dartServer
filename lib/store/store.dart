@@ -44,20 +44,6 @@ class PersistentProvider {
         });
     }
 
-    Future<List<YounowTag>> getTags(String local){
-        var completer = new Completer();
-        this.connectionPool.query('SELECT * FROM tag WHERE locale="'+local+'" ORDER BY score, name').then((result) {
-            List<YounowTag> tags = new List<YounowTag>();
-            result.forEach((row) {
-                YounowTag tag = new YounowTag(row.name, row.score);
-                tags.add(tag);
-            }).then((e){
-                completer.complete(tags);
-            });
-        });
-        return completer.future;
-    }
-
     Future<List<String>> getLocals(){
         var completer = new Completer();
         this.connectionPool.query('SELECT * FROM locales').then((result) {
@@ -71,9 +57,23 @@ class PersistentProvider {
         return completer.future;
     }
 
+    Future<List<YounowTag>> getTags(String local){
+        var completer = new Completer();
+        this.connectionPool.query('SELECT DISTINCT * FROM younowmonitor.tag WHERE locale="'+local+'" GROUP BY name ORDER BY score DESC, time ASC').then((result) {
+            List<YounowTag> tags = new List<YounowTag>();
+            result.forEach((row) {
+                YounowTag tag = new YounowTag(row.name, row.score);
+                tags.add(tag);
+            }).then((e){
+                completer.complete(tags);
+            });
+        });
+        return completer.future;
+    }
+
     Future<List<YounowUser>> getUsers(String locale, String tag){
         var completer = new Completer();
-        this.connectionPool.query('SELECT * FROM user WHERE locale="'+locale+'" AND tag="'+tag+'"').then((result) {
+        this.connectionPool.query('SELECT * FROM user WHERE locale="'+locale+'" AND tag="'+tag+'" ORDER BY viewers DESC').then((result) {
             List<YounowUser> users = new List<YounowUser>();
             result.forEach((dbuser) {
                 var user = new YounowUser(
