@@ -5,7 +5,9 @@ class ControllerApiGetData extends RouteController {
 
     ControllerApiGetData(this.yn): super();
 
-    Map execute(Map params) {
-        return yn.getData();
+    Future<Map> execute(Map params) {
+        var completer = new Completer();
+        completer.complete(yn.getRowData());
+        return completer.future;
     }
 }

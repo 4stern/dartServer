@@ -13,50 +13,83 @@ body {
     background-color: #f2f0f1;
 }
 
-li {
+div.head h1{
+    font-size: 12px;
+    padding:0;
+    margin: 0;
+}
+div.head h2{
+    font-size: 35px;
+}
+div.head p{
+    font-size: 10px;
+    padding:0;
+    margin: 0;
+}
+
+div.head h2 span {
+    display: inline-block;
+}
+
+.list div{
+    display: none;
+    position: absolute;
+    background: white;
+    box-shadow: 0px 0px 5px #888888;
+    max-height: 300px;
+    overflow: auto;
+    font-size: 20px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+.list:hover div{
+    display: block;
+    z-index: 100;
+}
+.list div ul{
+    padding: 15px 0px;
+    margin: 0;
+    list-style: none;
+}
+.list div ul li{
+    padding: 5px 50px;
+    cursor: pointer;
+}
+.list div ul li:hover{
+    background: #D0D0D0;
+}
+.list:hover{
+    background: white;
+    box-shadow: 0px 0px 5px #888888;
+}
+
+
+
+
+ul.users{
+    position: absolute;
+    left: 0px;
+    width: 392px;
+    padding: 0;
+    margin: 0;
+    z-index: 50;
+
+    height: 800px;
+    overflow: auto;
+}
+ul.users li {
     position: relative;
     cursor: pointer;
     overflow: hidden;
+    float: left;
+    width: 75px;
+    height: 75px;
+    background-size: contain !important;
 }
-
-h2 {
-    font-size: 18px;
-    padding: 0;
-    margin: 0 0 5px 0;
-}
-
-.trendingTags,
-.trendingTags td{
-    font-size: 14px;
-    line-height: 14px;
-}
-
-.trendingTags > div {
-    width: 200px;
-    background: #f2f0f1;
-    height: 100%;
-    overflow: auto;
-}
-.trendingTags table {
-    width:100%;
-}
-.trendingTags tr:hover{
-    background: #e0e0e0;
-    cursor: pointer;
-}
-
-
-.trendingUser{
-    position: absolute;
-    left: 250px;
-    width: 600px;
-}
-
-ul {
-    padding: 0;
-    margin: 0;
-}
-li span.tagname {
+ul.users li span.tagname {
     position: absolute;
     background: white;
     left: 0px;
@@ -74,7 +107,7 @@ li span.tagname {
     text-decoration: none;
 }
 
-li:hover span.tagname {
+ul.users li:hover span.tagname {
     bottom: 0px;
     -webkit-transition: all 0.2s ease-out;
     -moz-transition: all 0.2s ease-out;

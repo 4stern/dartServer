@@ -3,8 +3,10 @@ part of server;
 abstract class RouteController {
     RouteController();
 
-    Map execute(Map params) {
-        return {
-        };
+    Future<Map> execute(Map params) {
+        var completer = new Completer();
+        Map map = new Map();
+        completer.complete(map);
+        return completer.future;
     }
 }

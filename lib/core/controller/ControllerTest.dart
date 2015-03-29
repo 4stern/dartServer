@@ -1,9 +1,11 @@
 part of server;
 
 class ControllerTest extends RouteController {
-	Map execute(Map params) {
+	Future<Map> execute(Map params) {
 		print('ControllerTest');
 		print(params);
-        return params;
+        var completer = new Completer();
+        completer.complete(params);
+        return completer.future;
     }
 }

@@ -1,4 +1,5 @@
 name: server
 dependencies:
-        json: any
-        jaded: any
+  json: any
+  jaded: any
+  sqljocky: ">=0.11.0 <0.12.0"

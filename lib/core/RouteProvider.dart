@@ -42,8 +42,9 @@ class RouteProvider {
             ResponseHandler responseHandler = routeConfig["response"];
 
             //create vars for the template
-            Map templateVars = controller.execute(params);
-            responseHandler.response(request, templateVars);
+            controller.execute(params).then((templateVars){
+                responseHandler.response(request, templateVars);
+            });
 
         } else {
 
@@ -51,8 +52,12 @@ class RouteProvider {
             String comparedUrl = null;
             Map comparedUrlParams = null;
             for(var key in this.routeControllers.keys) {
-                comparedUrlParams = this.compareUrlPattern(path, key);
-                comparedUrl = key;
+                Map test = this.compareUrlPattern(path, key);
+                if(test != null){
+                    comparedUrlParams= test;
+                    comparedUrl = key;
+                    break;
+                }
             };
 print('404#0');
 print(comparedUrlParams);
@@ -66,9 +71,9 @@ print(comparedUrlParams);
                 ResponseHandler responseHandler = routeConfig["response"];
 
                 //create vars for the template
-                Map templateVars = controller.execute(params);
-                responseHandler.response(request, templateVars);
-
+                controller.execute(comparedUrlParams).then((templateVars){
+                    responseHandler.response(request, templateVars);
+                });
             } else {
 
                 //try to find the file with the default file-response-handler
