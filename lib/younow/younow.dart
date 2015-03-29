@@ -24,15 +24,20 @@ abstract class Serializable {
 
 class HttpCaller {
     void _call(url, callback) {
-        HttpClient client = new HttpClient();
-        String jsonContent = "";
-        client.getUrl(Uri.parse(url))
-        .then((HttpClientRequest request) => request.close())
-        .then((HttpClientResponse response) {
-            response.transform(UTF8.decoder).listen((contents) {
-                jsonContent += contents.toString();
-            }, onDone:() => callback(jsonContent));
-        });
+        try{
+            HttpClient client = new HttpClient();
+            String jsonContent = "";
+            client.getUrl(Uri.parse(url))
+            .then((HttpClientRequest request) => request.close())
+            .then((HttpClientResponse response) {
+                response.transform(UTF8.decoder).listen((contents) {
+                    jsonContent += contents.toString();
+                }, onDone:() => callback(jsonContent));
+            });
+        } catch(e){
+            print(e);
+            callback(null);
+        }
     }
 }
 
