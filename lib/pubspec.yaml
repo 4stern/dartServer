@@ -1,5 +1,6 @@
 name: server
 dependencies:
+  route_provider: any
   json: any
   jaded: any
   sqljocky: ">=0.11.0 <0.12.0"

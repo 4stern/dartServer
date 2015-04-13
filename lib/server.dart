@@ -4,17 +4,13 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:route_provider/route_provider.dart';
 import 'package:jaded/jaded.dart' as jade;
 import 'younow/younow.dart';
 import 'store/store.dart';
 
-part 'core/RouteController.dart';
-part 'core/RouteProvider.dart';
-
-part 'core/ResponseHandler.dart';
 part 'core/JadeResponse.dart';
 part 'core/JSONResponse.dart';
-part 'core/FileResponse.dart';
 
 part 'core/controller/ControllerApiGetTags.dart';
 part 'core/controller/ControllerApiGetData.dart';
